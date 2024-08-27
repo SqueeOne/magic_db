@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CardColor {
+  id              String            @id
+  name            String
+  cardId          String?
+  CardToCardColor CardToCardColor[]
+}
+
+model CardType {
+  id    String  @id
+  name  String
+  cards cards[]
+}
+
+model Deck {
+  id   String @id
+  name String
+}
+
+model CardToCardColor {
+  A         String
+  B         String
+  cards     cards     @relation(fields: [A], references: [id], onDelete: Cascade)
+  CardColor CardColor @relation(fields: [B], references: [id], onDelete: Cascade)
+
+  @@unique([A, B], map: "_CardToCardColor_AB_unique")
+  @@index([B], map: "_CardToCardColor_B_index")
+  @@map("_CardToCardColor")
+}
+
+model cards {
+  id              String            @id
+  name            String
+  cardTypeId      String
+  CardToCardColor CardToCardColor[]
+  CardType        CardType          @relation(fields: [cardTypeId], references: [id])
+}
+
+model users {
+  id         String   @id
+  name       String?
+  email      String?  @unique
+  created_at DateTime @default(now())
+  updated_at DateTime
+}
