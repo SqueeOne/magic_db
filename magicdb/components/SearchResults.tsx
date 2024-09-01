@@ -1,11 +1,11 @@
 import findTopItems from '@/utils/prismaFunctions'
 import { useEffect, useState } from 'react'
 
-const SearchResults = ({ term }) => {
-  const [results, setResults] = useState([])
+const SearchResults = ({ term }: any) => {
+  const [results, setResults] = useState<any[]>([])
   useEffect(() => {
     ;(async () => {
-      const res = await findTopItems(term)
+      const res: any[] = await findTopItems(term)
       setResults(res)
     })()
   }, [term])
