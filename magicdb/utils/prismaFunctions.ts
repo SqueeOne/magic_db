@@ -18,8 +18,6 @@ const findTopItems = async (searchTerm: string) => {
     return item.setcode
   })
 
-  console.log(topCodes)
-
   const topItemSets = await prisma.sets
     .findMany({
       where: {
@@ -29,7 +27,6 @@ const findTopItems = async (searchTerm: string) => {
     .then((res1) => {
       for (let i = 0; i < topItems.length; i++) {
         topItems[i].setname = res1[i].name
-        console.log(res1[i])
       }
     })
 
