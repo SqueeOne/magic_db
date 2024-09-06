@@ -1,5 +1,5 @@
 import { prisma } from '@/utils/db'
-import getManaSymbols from '@/utils/helperFunctions'
+import { formatCardText, getManaSymbols } from '@/utils/helperFunctions'
 import Image from 'next/image'
 
 const getCard = async (id: number) => {
@@ -27,8 +27,8 @@ const CardPage = async ({ params }) => {
   )
   const cardData = await data.json()
   const manaSymbolUris = await getManaSymbols(card[0]?.manacost)
-
-  console.log(card[0]?.manacost)
+  const splitText = await formatCardText(card[0]?.text)
+  console.log(splitText)
 
   return (
     <div className="w-[800px] bg-white flex flex-col mx-auto rounded-xl border border-blue-100 shadow-md p-4">
@@ -57,8 +57,28 @@ const CardPage = async ({ params }) => {
           width="300"
           height="500"
         />
-        <div className="flex flex-col ml-4">
-          <p>{card[0]?.keywords}</p>
+        <div className="flex flex-col ml-4 justify-between">
+          <div className="flex flex-col">
+            <div>
+              {splitText.map((item) =>
+                item.length <= 3 && item.indexOf(' ') <= 0 ? (
+                  <i className={`ms ms-${item.toLowerCase()}`}></i>
+                ) : (
+                  <>{item.replace('\\n', '')}</>
+                )
+              )}
+            </div>
+            {/* <p>{splitText.map((element) => element.replace('\\n', ''))}</p> */}
+            {/* {card[0]?.text.split('\\n').map((line, index) => (
+              <p
+                className="text-gray-700 first:mb-4 mb-2 first:text-lg text-sm"
+                key={index}
+              >
+                {line}
+              </p>
+            ))} */}
+          </div>
+          <p className="text-gray-600 italic text-sm">{card[0]?.flavortext}</p>
         </div>
       </div>
     </div>
