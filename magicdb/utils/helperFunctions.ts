@@ -12,16 +12,23 @@ export const getManaSymbols = async (manaCost: string) => {
 }
 
 export const formatCardText = async (cardText: string) => {
-  const splitText = cardText.split(/{|}/g)
+  const splitText = cardText.split('\\n')
+  const endText = splitText.map((line) => {
+    return line.split(/{|}/g)
+  })
+
+  console.log(`GRRRRRRRRRRRRR: ${endText}`)
   // const splitText = cardText.replace(/(?<=\{)(.*?)(?=\})/g, function (matched) {
   //   return "<i className='ms ms-'" + matched.toLowerCase + "'></i>"
   // })
 
-  splitText.map((tex, index) => {
-    if (tex == 'T') {
-      splitText[index] = 'tap'
-    }
+  endText.map((tex, index) => {
+    return tex.map((t) => {
+      if (t == 'T') {
+        tex[index] = 'tap'
+      }
+    })
   })
 
-  return splitText
+  return endText
 }

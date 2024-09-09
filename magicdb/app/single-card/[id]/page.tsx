@@ -56,29 +56,34 @@ const CardPage = async ({ params }) => {
           alt={`${card[0]?.name}`}
           width="300"
           height="500"
+          className="shadow-md"
         />
         <div className="flex flex-col ml-4 justify-between">
           <div className="flex flex-col">
             <div>
-              {splitText.map((item) =>
-                item.length <= 3 && item.indexOf(' ') <= 0 ? (
-                  <i className={`ms ms-${item.toLowerCase()}`}></i>
-                ) : (
-                  <>{item.replace('\\n', '')}</>
-                )
-              )}
+              {splitText.map((line, index) => (
+                <p className="mb-2 text-gray-700" key={index}>
+                  {line.map((item, i) =>
+                    item.length <= 3 && item.indexOf(' ') <= 0 ? (
+                      <i className={`ms ms-${item.toLowerCase()}`} key={i}></i>
+                    ) : (
+                      <>{item.replace(',', '')}</>
+                    )
+                  )}
+                </p>
+              ))}
             </div>
-            {/* <p>{splitText.map((element) => element.replace('\\n', ''))}</p> */}
-            {/* {card[0]?.text.split('\\n').map((line, index) => (
-              <p
-                className="text-gray-700 first:mb-4 mb-2 first:text-lg text-sm"
-                key={index}
-              >
-                {line}
-              </p>
-            ))} */}
           </div>
-          <p className="text-gray-600 italic text-sm">{card[0]?.flavortext}</p>
+          <div>
+            <p className="text-gray-600 italic text-sm mb-4">
+              {card[0]?.flavortext}
+            </p>
+            <div className="flex justify-end">
+              <p className="text-gray-600 text-sm font-light">
+                Artist: {card[0]?.artist}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
