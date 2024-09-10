@@ -9,32 +9,30 @@ const getCard = async (id: number) => {
     },
   })
 
-  console.log(card)
-
   const cardImageUri = await prisma.cardidentifiers.findFirst({
     where: {
       uuid: card?.uuid,
     },
   })
 
-  return [card, cardImageUri]
+  return { ...card, cardImageUri }
 }
 
-const CardPage = async ({ params }) => {
+const CardPage = async ({ params }: any) => {
   const card = await getCard(parseInt(params.id))
   const data = await fetch(
-    `https://api.scryfall.com/cards/${card[1]?.scryfallid}`
+    `https://api.scryfall.com/cards/${card.cardImageUri?.scryfallid}`
   )
   const cardData = await data.json()
-  const manaSymbolUris = await getManaSymbols(card[0]?.manacost)
-  const splitText = await formatCardText(card[0]?.text)
-  console.log(splitText)
+  console.log(card)
+  const manaSymbolUris = await getManaSymbols(card.manacost as string)
+  const splitText = await formatCardText(card.text as string)
 
   return (
     <div className="w-[800px] bg-white flex flex-col mx-auto rounded-xl border border-blue-100 shadow-md p-4">
       <div className="border-b border-blue-200 mb-4">
         <span className="flex content-center justify-between">
-          <h1 className="text-4xl font-bold text-gray-700">{card[0]?.name}</h1>
+          <h1 className="text-4xl font-bold text-gray-700">{card.name}</h1>
           <div className="flex my-auto">
             {manaSymbolUris?.map((symbolUri, index) => (
               <div key={index} className="mr-2">
@@ -48,15 +46,15 @@ const CardPage = async ({ params }) => {
             ))}
           </div>
         </span>
-        <p className="text-sm font-light text-gray-700">{card[0]?.type}</p>
+        <p className="text-sm font-light text-gray-700">{card.type}</p>
       </div>
       <div className="flex">
         <Image
           src={cardData.image_uris.normal}
-          alt={`${card[0]?.name}`}
-          width="300"
-          height="500"
-          className="shadow-md"
+          alt={`${card.name}`}
+          width="250"
+          height="420"
+          className="shadow-md w-auto h-auto priority"
         />
         <div className="flex flex-col ml-4 justify-between">
           <div className="flex flex-col">
@@ -76,11 +74,11 @@ const CardPage = async ({ params }) => {
           </div>
           <div>
             <p className="text-gray-600 italic text-sm mb-4">
-              {card[0]?.flavortext}
+              {card.flavortext}
             </p>
             <div className="flex justify-end">
               <p className="text-gray-600 text-sm font-light">
-                Artist: {card[0]?.artist}
+                Artist: {card.artist}
               </p>
             </div>
           </div>

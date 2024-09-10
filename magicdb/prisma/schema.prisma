@@ -101,7 +101,7 @@ model cardrulings {
 }
 
 model cards {
-  id                      Int      @id @default(autoincrement())
+  id                      Int       @id @default(autoincrement())
   artist                  String?
   artistids               String?
   asciiname               String?
@@ -177,9 +177,11 @@ model cards {
   toughness               String?
   type                    String?
   types                   String?
-  uuid                    String   @db.VarChar(36)
+  uuid                    String    @db.VarChar(36)
   variations              String?
   watermark               String?
+  UserDeck                UserDeck? @relation(fields: [userDeckId], references: [id])
+  userDeckId              Int?
 
   @@index([uuid], map: "cards_uuid")
 }
@@ -344,4 +346,22 @@ model tokens {
   watermark       String?
 
   @@index([uuid], map: "tokens_uuid")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clerkID String     @unique
+  email   String     @unique
+  decks   UserDeck[]
+}
+
+model UserDeck {
+  id     Int     @id @default(autoincrement())
+  name   String
+  userId String
+  user   User    @relation(fields: [userId], references: [id])
+  cards  cards[]
 }
