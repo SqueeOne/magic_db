@@ -1,3 +1,4 @@
+import Navbar from '@/components/Navbar'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 
@@ -21,7 +22,10 @@ export default function RootLayout({
             type="text/css"
           />
         </head>
-        <body>{children}</body>
+        <body>
+          <Navbar />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   )
