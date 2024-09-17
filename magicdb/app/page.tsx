@@ -8,7 +8,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-white/90">MagicDB</h1>
       </div>
       <div className="w-full h-2/3 flex justify-center mt-6">
-        <SearchBar />
+        <SearchBar size="Normal" />
       </div>
     </main>
   )

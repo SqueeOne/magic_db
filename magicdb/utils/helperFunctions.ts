@@ -1,3 +1,6 @@
+import { SearchFilters } from '@/app/decks/create/types'
+import { getCardsFromFilters, getCardsWithImages } from './prismaFunctions'
+
 export const getManaSymbols = async (manaCost: string) => {
   const symbols = manaCost
     .split(/{|}/g)
@@ -31,4 +34,14 @@ export const formatCardText = async (cardText: string) => {
   })
 
   return endText
+}
+
+export const filterCardsAndImages = async ({ filters }: SearchFilters) => {
+  const res: any = await getCardsFromFilters(filters).then(
+    async (result: any) => {
+      await getCardsWithImages(result)
+    }
+  )
+
+  return await res.json()
 }

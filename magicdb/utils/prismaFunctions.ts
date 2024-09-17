@@ -1,6 +1,56 @@
 'use server'
 
+import { SearchFilters } from '@/app/decks/create/types'
 import { prisma } from './db'
+
+export const getCardsFromFilters = async (
+  filters: SearchFilters['filters']
+) => {
+  console.log(filters)
+  const filteredCards = filters
+    ? await prisma.cards.findMany({
+        where: {
+          OR: [
+            { name: { contains: filters.text } },
+            { text: { contains: filters.text } },
+          ],
+        },
+        take: 20,
+      })
+    : { text: 'bla' }
+
+  return filteredCards
+}
+
+export const getCardsWithImages = async (filters: SearchFilters['filters']) => {
+  console.log('HERE')
+  const filteredCards: any = filters
+    ? await prisma.cards.findMany({
+        where: {
+          OR: [
+            { name: { contains: filters.text } },
+            { text: { contains: filters.text } },
+          ],
+        },
+        take: 20,
+      })
+    : { text: 'bla' }
+
+  const cardImages = filteredCards.map(async (card: any) => {
+    const cardImageUri = await prisma.cardidentifiers.findFirst({
+      where: {
+        uuid: card.uuid,
+      },
+    })
+    const cardImg = await fetch(
+      `https://api.scryfall.com/cards/${cardImageUri?.scryfallid}`
+    )
+    const imgData = await cardImg.json()
+    return { ...card, imgData }
+  })
+  console.log(`Bruhaha: ${cardImages}`)
+  return cardImages
+}
 
 const findTopItems = async (searchTerm: string) => {
   let topItems =
