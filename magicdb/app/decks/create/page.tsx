@@ -23,7 +23,7 @@ const Create = () => {
         </div>
       </div>
 
-      <div className="w-2/5">
+      <div className="w-3/5">
         <CreateSearchResults filters={{ text: search }} />
       </div>
     </div>

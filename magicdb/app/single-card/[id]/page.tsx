@@ -24,7 +24,6 @@ const CardPage = async ({ params }: any) => {
     `https://api.scryfall.com/cards/${card.cardImageUri?.scryfallid}`
   )
   const cardData = await data.json()
-  console.log(card)
   const manaSymbolUris = await getManaSymbols(card.manacost as string)
   const splitText = await formatCardText(card.text as string)
 
